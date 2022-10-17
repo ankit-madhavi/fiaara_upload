@@ -9,11 +9,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.v2stech.bulkupload.dao.UploadDao;
+import com.v2stech.bulkupload.repository.UploadRepository;
 import com.v2stech.bulkupload.service.UploadService;
 
-public class UploadServiceImpl implements UploadService{
+@Service
+public class UploadServiceImpl implements UploadService {
 
 	private static final String SEMI_COLON = ";";
 
@@ -30,19 +32,19 @@ public class UploadServiceImpl implements UploadService{
 	private static final String USER_TABLE_WITH_COLUMN_NAME = "users (FORENAME,FAMILY_NAME,USERNAME,POSTCODE,EMAIL_ADDRESS,USER_TYPE_ID)";
 
 	private static final String INSERT = "Insert into ";
-	
+
 	private static final String FILE_PATH = File.separator + "home" + File.separator + "v2stech" + File.separator
 			+ "Downloads" + File.separator;
-	
+
 	@Autowired
-	UploadDao uploadDao;
+	UploadRepository uploadRepository;
 
 	public Sheet readFile(String filePath) throws IOException {
 		FileInputStream fileInputStream = new FileInputStream(new File(filePath));
 		Workbook workbook = new XSSFWorkbook(fileInputStream);
 		return workbook.getSheetAt(0);
 	}
-	
+
 	@Override
 	public StringBuilder uploadFile(String fileName) throws IOException {
 		StringBuilder query = new StringBuilder();
@@ -74,7 +76,7 @@ public class UploadServiceImpl implements UploadService{
 			query.append(COMMA);
 			query.append(getUserType(row.getCell(5).toString()));
 			query.append(BRACES_CLOSE);
-			if(row.getRowNum() == row.getSheet().getLastRowNum()) {
+			if (row.getRowNum() == row.getSheet().getLastRowNum()) {
 				query.append(SEMI_COLON);
 			} else {
 				query.append(COMMA);
@@ -82,8 +84,8 @@ public class UploadServiceImpl implements UploadService{
 		}
 		return query;
 	}
-	
-	public int getUserType(String typeName) {
-		return uploadDao.findUserTypeIdByTypeName(typeName);
+
+	public Long getUserType(String typeName) {
+		return uploadRepository.findByTypeName(typeName).getId();
 	}
 }
