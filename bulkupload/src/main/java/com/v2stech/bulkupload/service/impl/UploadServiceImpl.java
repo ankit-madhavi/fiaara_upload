@@ -9,10 +9,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.v2stech.bulkupload.dao.UploadDao;
 import com.v2stech.bulkupload.service.UploadService;
+import com.v2stech.bulkuploadrepository.UploadRepository;
 
+@Service
 public class UploadServiceImpl implements UploadService{
 
 	private static final String SEMI_COLON = ";";
@@ -35,7 +37,7 @@ public class UploadServiceImpl implements UploadService{
 			+ "Downloads" + File.separator;
 	
 	@Autowired
-	UploadDao uploadDao;
+	UploadRepository uploadRepository;
 
 	public Sheet readFile(String filePath) throws IOException {
 		FileInputStream fileInputStream = new FileInputStream(new File(filePath));
@@ -84,6 +86,6 @@ public class UploadServiceImpl implements UploadService{
 	}
 	
 	public int getUserType(String typeName) {
-		return uploadDao.findUserTypeIdByTypeName(typeName);
+		return uploadRepository.findByTypeName(typeName).getId();
 	}
 }
