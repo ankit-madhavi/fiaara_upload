@@ -1,4 +1,4 @@
-package com.v2stech.bulkuploadrepository;
+package com.v2stech.bulkupload.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
