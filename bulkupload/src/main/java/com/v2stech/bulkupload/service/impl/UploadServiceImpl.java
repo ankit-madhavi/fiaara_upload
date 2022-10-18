@@ -17,6 +17,8 @@ import com.v2stech.bulkupload.service.UploadService;
 @Service
 public class UploadServiceImpl implements UploadService {
 
+	private static final String ACTIVE = "Active";
+
 	private static final String SEMI_COLON = ";";
 
 	private static final String BRACES_CLOSE = ")";
@@ -29,7 +31,7 @@ public class UploadServiceImpl implements UploadService {
 
 	private static final String VALUES = " values ";
 
-	private static final String USER_TABLE_WITH_COLUMN_NAME = "users (FORENAME,FAMILY_NAME,USERNAME,POSTCODE,EMAIL_ADDRESS,USER_TYPE_ID)";
+	private static final String USER_TABLE_WITH_COLUMN_NAME = "users (FORENAME,FAMILY_NAME,USERNAME,POSTCODE,EMAIL_ADDRESS,USER_TYPE_ID,USER_STATUS_CODE)";
 
 	private static final String INSERT = "Insert into ";
 
@@ -68,13 +70,19 @@ public class UploadServiceImpl implements UploadService {
 			query.append(row.getCell(2).toString());
 			query.append(QUOTES);
 			query.append(COMMA);
+			query.append(QUOTES);
 			query.append(row.getCell(3).toString());
+			query.append(QUOTES);
 			query.append(COMMA);
 			query.append(QUOTES);
 			query.append(row.getCell(4).toString());
 			query.append(QUOTES);
 			query.append(COMMA);
 			query.append(getUserType(row.getCell(5).toString()));
+			query.append(COMMA);
+			query.append(QUOTES);
+			query.append(ACTIVE);
+			query.append(QUOTES);
 			query.append(BRACES_CLOSE);
 			if (row.getRowNum() == row.getSheet().getLastRowNum()) {
 				query.append(SEMI_COLON);
