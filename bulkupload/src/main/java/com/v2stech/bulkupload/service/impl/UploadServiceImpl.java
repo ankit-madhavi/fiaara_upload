@@ -1,7 +1,10 @@
 package com.v2stech.bulkupload.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -71,7 +74,7 @@ public class UploadServiceImpl implements UploadService {
 			query.append(QUOTES);
 			query.append(COMMA);
 			query.append(QUOTES);
-			query.append((int)row.getCell(3).getNumericCellValue());
+			query.append((int) row.getCell(3).getNumericCellValue());
 			query.append(QUOTES);
 			query.append(COMMA);
 			query.append(QUOTES);
@@ -95,5 +98,17 @@ public class UploadServiceImpl implements UploadService {
 
 	public Long getUserType(String typeName) {
 		return uploadRepository.findByTypeName(typeName).getId();
+	}
+
+	@Override
+	public ByteArrayInputStream downloadFile(String query) throws IOException {
+		File file = new File(FILE_PATH + "user.sql");
+		FileWriter writer = new FileWriter(file);
+		byte[] arr = new byte[(int)file.length()]; 
+		writer.write(query);
+		writer.close();
+		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+			return new ByteArrayInputStream(arr);
+		}
 	}
 }

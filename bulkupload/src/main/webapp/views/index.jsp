@@ -57,13 +57,14 @@
 
 			<div class="card">
 				<div class="card-header">
-				<div class="form-group row">
-					<h5>Upload File SQL Query</h5>
-					<button class="btn btn-outline-secondary" style="margin-left: 75%" id="copy"><em class="fa fa-copy"></em></button>
+					<div class="form-group row">
+						<h5>Upload File SQL Query</h5>
+						<button class="btn btn-outline-secondary" style="margin-left: 65%" id="download"><em class="fa fa-download"></em></button>
+						<button class="btn btn-outline-secondary" style="margin-left: 4%" id="copy"><em class="fa fa-copy"></em></button>
 					</div>
 				</div>
 				<div class="card-block">
-					<textarea rows="10" cols="110" id="sql-query" disabled="disabled"></textarea>
+					<textarea rows="10" cols="108" id="sql-query" disabled="disabled"></textarea>
 				</div>
 			</div>
 
