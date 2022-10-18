@@ -52,24 +52,5 @@ $("#copy").click(function() {
 });
 
 $("#download").click(function() {
-	var query = $("#sql-query").val();
-	if (query === "" || query == null) {
-		$('#errorMessage').html("Query not available");
-		$('#error').show();
-		$("#error").delay(8000).fadeOut("slow");
-	} else {
-		$.ajax({
-			type: "GET",
-			url: "http://localhost:8080/download/" + query,
-			success: function() {
-				window.location.href = "http://localhost:8080/download/"+query;
-				$('#errorMessage').html('');
-			},
-			error: function(error) {
-				$('#errorMessage').html(error.responseJSON.message);
-				$('#error').show();
-				$("#error").delay(8000).fadeOut("slow");
-			}
-		});
-	}
+			window.location.href = "http://localhost:8080/download";
 });

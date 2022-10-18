@@ -7,6 +7,6 @@ public interface UploadService {
 
 	StringBuilder uploadFile(String fileName) throws IOException;
 
-	ByteArrayInputStream downloadFile(String query) throws IOException;
+	ByteArrayInputStream downloadFile() throws IOException;
 
 }
