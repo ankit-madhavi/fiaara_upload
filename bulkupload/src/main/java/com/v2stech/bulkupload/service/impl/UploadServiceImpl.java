@@ -71,7 +71,7 @@ public class UploadServiceImpl implements UploadService {
 			query.append(QUOTES);
 			query.append(COMMA);
 			query.append(QUOTES);
-			query.append(row.getCell(3).toString());
+			query.append((int)row.getCell(3).getNumericCellValue());
 			query.append(QUOTES);
 			query.append(COMMA);
 			query.append(QUOTES);
