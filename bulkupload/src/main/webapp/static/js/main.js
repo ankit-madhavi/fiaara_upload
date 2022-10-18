@@ -4,6 +4,11 @@ $(document).ready(function() {
 
 $("#btnSubmit").click(function(event) {
 	event.preventDefault();
+	$('#sql-query').val('');
+	var file = $('#fileInput').val();
+	var filename = check(file, "File");
+	if (filename) {
+		$('#FileError').val('');
 		var form = $('#fileUploadForm')[0];
 		var data = new FormData(form);
 		$.ajax({
@@ -16,7 +21,7 @@ $("#btnSubmit").click(function(event) {
 			cache: false,
 			timeout: 600000,
 			success: function(response) {
-				console.log(response);
+				$('#sql-query').val(response);
 			},
 			error: function(error) {
 				$('#errorMessage').html(error.responseJSON.message)
@@ -24,4 +29,24 @@ $("#btnSubmit").click(function(event) {
 				$("#error").delay(8000).fadeOut("slow");
 			}
 		});
+	}
+});
+
+
+function check(filed, message) {
+	if (filed == "" || filed == null) {
+		$("#" + message + "Error").html(message + " is Required");
+		$("#" + message + "Error").show();
+		flag = false;
+	} else {
+		$("#" + message + "Error").hide();
+		flag = true;
+	}
+	return flag;
+}
+
+
+$("#copy").click(function() {
+	var copyText = $("#sql-query").val();
+	navigator.clipboard.writeText(copyText);
 });
