@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,8 +42,7 @@ public class UploadController {
 	public ResponseEntity<Resource> dowload(@PathVariable String query) throws IOException{
 		InputStreamResource inputStreamResource = new InputStreamResource(uploadService.downloadFile(query));
 		return ResponseEntity.ok()
-				.header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
-						"attachment; filename= user"+new Date()+SQL)
+				.header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename= User"+new Date()+SQL)
 				.contentType(MediaType.parseMediaType("application/octet-stream")).body(inputStreamResource);
 	}
 	

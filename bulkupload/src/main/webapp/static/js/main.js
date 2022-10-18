@@ -62,6 +62,7 @@ $("#download").click(function() {
 			type: "GET",
 			url: "http://localhost:8080/download/" + query,
 			success: function() {
+				window.location.href = "http://localhost:8080/download/"+query;
 				$('#errorMessage').html('');
 			},
 			error: function(error) {

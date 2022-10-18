@@ -1,0 +1,1 @@
+Insert into users (FORENAME,FAMILY_NAME,USERNAME,POSTCODE,EMAIL_ADDRESS,USER_TYPE_ID,USER_STATUS_CODE) values ("Ankit","Madhavi","ankitm","400701","ankit@gmail.com",1,"Active"),("Abc","xyz","abcxy","123456","abc@gmail.com",1,"Active")

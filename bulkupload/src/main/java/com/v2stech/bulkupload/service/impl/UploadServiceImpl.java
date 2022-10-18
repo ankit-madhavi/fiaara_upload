@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -19,6 +22,8 @@ import com.v2stech.bulkupload.service.UploadService;
 
 @Service
 public class UploadServiceImpl implements UploadService {
+
+	private static final String PATHNAME = "src/main/resources/sql/User"+new Date()+".sql";
 
 	private static final String ACTIVE = "Active";
 
@@ -102,13 +107,14 @@ public class UploadServiceImpl implements UploadService {
 
 	@Override
 	public ByteArrayInputStream downloadFile(String query) throws IOException {
-		File file = new File(FILE_PATH + "user.sql");
-		FileWriter writer = new FileWriter(file);
-		byte[] arr = new byte[(int)file.length()]; 
-		writer.write(query);
-		writer.close();
+		File file = new File(PATHNAME);
+		try (FileWriter writer = new FileWriter(file)) {
+			writer.write(query);
+		}
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-			return new ByteArrayInputStream(arr);
+			byte[] array = Files.readAllBytes(Paths.get(PATHNAME));
+			file.deleteOnExit();
+			return new ByteArrayInputStream(array);
 		}
 	}
 }
