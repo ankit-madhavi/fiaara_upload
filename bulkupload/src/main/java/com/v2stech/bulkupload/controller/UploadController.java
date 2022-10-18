@@ -38,9 +38,9 @@ public class UploadController {
 		return uploadService.uploadFile(file.getOriginalFilename()).toString();
 	}
 	
-	@GetMapping("/download/{query}")
-	public ResponseEntity<Resource> dowload(@PathVariable String query) throws IOException{
-		InputStreamResource inputStreamResource = new InputStreamResource(uploadService.downloadFile(query));
+	@GetMapping("/download")
+	public ResponseEntity<Resource> dowload() throws IOException{
+		InputStreamResource inputStreamResource = new InputStreamResource(uploadService.downloadFile());
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename= User"+new Date()+SQL)
 				.contentType(MediaType.parseMediaType("application/octet-stream")).body(inputStreamResource);
