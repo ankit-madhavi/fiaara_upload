@@ -113,7 +113,6 @@ public class UploadServiceImpl implements UploadService {
 		}
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
 			byte[] array = Files.readAllBytes(Paths.get(PATHNAME));
-			file.deleteOnExit();
 			return new ByteArrayInputStream(array);
 		}
 	}
