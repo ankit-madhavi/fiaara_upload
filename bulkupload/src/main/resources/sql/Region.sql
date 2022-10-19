@@ -1,0 +1,1 @@
+Insert into region (REGION_NAME,REGION_MANAGER_ID) values ("Mumbai",1),("Nagpur",3);

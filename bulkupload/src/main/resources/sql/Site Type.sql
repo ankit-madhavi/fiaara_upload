@@ -1,0 +1,1 @@
+Insert into site_types (SITE_TYPE_NAME) values ("Bank"),("Hospital"),("IT"),("Residential");

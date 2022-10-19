@@ -66,79 +66,55 @@ public class UploadServiceImpl implements UploadService {
 
 	@Override
 
-	public StringBuilder uploadUserFile(String fileName, String table) throws IOException {
+	public StringBuilder uploadFile(String fileName, String table) throws IOException {
 		StringBuilder query = new StringBuilder();
 		query.append(INSERT);
-		query.append(USER_TABLE_WITH_COLUMN_NAME);
+		if (table.equals("User")) {
+			query.append(USER_TABLE_WITH_COLUMN_NAME);
+		} else if (table.equals("Region")) {
+			query.append(REGION_TABLE_WITH_COLUMN_NAME);
+		} else if (table.equals("Area")) {
+
+		} else if (table.equals("Site Type")) {
+			query.append(SITE_TYPE_TABLE_WITH_COLUMN_NAME);
+		} else if (table.equals("Activity Type")) {
+
+		}
 		query.append(VALUES);
 		for (Row row : readFile(FILE_PATH + fileName)) {
 			if (row.getRowNum() == 0) {
 				continue;
 			}
-			query.append(BRACES_OPEN);
-			query.append(QUOTES);
-			query.append(row.getCell(0).toString());
-			query.append(QUOTES);
-			query.append(COMMA);
-			query.append(QUOTES);
-			query.append(row.getCell(1).toString());
-			query.append(QUOTES);
-			query.append(COMMA);
-			query.append(QUOTES);
-			query.append(row.getCell(2).toString());
-			query.append(QUOTES);
-			query.append(COMMA);
-			query.append(QUOTES);
-			query.append((int) row.getCell(3).getNumericCellValue());
-			query.append(QUOTES);
-			query.append(COMMA);
-			query.append(QUOTES);
-			query.append(row.getCell(4).toString());
-			query.append(QUOTES);
-			query.append(COMMA);
-			query.append(userTypeRepository.findByTypeName(row.getCell(5).toString()).getId());
-			query.append(COMMA);
-			query.append(QUOTES);
-			query.append(BRACES_CLOSE);
+			createQueryByExcel(table, query, row);
 			if (row.getRowNum() == row.getSheet().getLastRowNum()) {
 				query.append(SEMI_COLON);
 			} else {
 				query.append(COMMA);
 			}
 		}
-		File file = new File(PATHNAME + table + SQL);
-		try (FileWriter writer = new FileWriter(file)) {
-			writer.write(query.toString());
-		}
+		writer(table, query);
 		return query;
 	}
 
-	@Override
-	public StringBuilder uploadSiteType(String fileName, String table) throws IOException {
-		StringBuilder query = new StringBuilder();
-		query.append(INSERT);
-		query.append(SITE_TYPE_TABLE_WITH_COLUMN_NAME);
-		query.append(VALUES);
-		for (Row row : readFile(FILE_PATH + fileName)) {
-			if (row.getRowNum() == 0) {
-				continue;
-			}
-			query.append(BRACES_OPEN);
-			query.append(QUOTES);
-			query.append(row.getCell(0).toString());
-			query.append(QUOTES);
-			query.append(BRACES_CLOSE);
-			if (row.getRowNum() == row.getSheet().getLastRowNum()) {
-				query.append(SEMI_COLON);
-			} else {
-				query.append(COMMA);
-			}
+	private void createQueryByExcel(String table, StringBuilder query, Row row) {
+		if (table.equals("User")) {
+			userQuery(query, row);
+		} else if (table.equals("Region")) {
+			reqionQuery(query, row);
+		} else if (table.equals("Area")) {
+
+		} else if (table.equals("Site Type")) {
+			siteTypeQuery(query, row);
+		} else if (table.equals("Activity Type")) {
+
 		}
+	}
+
+	private void writer(String table, StringBuilder query) throws IOException {
 		File file = new File(PATHNAME + table + SQL);
 		try (FileWriter writer = new FileWriter(file)) {
 			writer.write(query.toString());
 		}
-		return query;
 	}
 
 	@Override
@@ -149,34 +125,52 @@ public class UploadServiceImpl implements UploadService {
 		}
 	}
 
-	@Override
-	public Object uploadRegionFile(String fileName, String table) throws IOException {
-		StringBuilder query = new StringBuilder();
-		query.append(INSERT);
-		query.append(REGION_TABLE_WITH_COLUMN_NAME);
-		query.append(VALUES);
-		for (Row row : readFile(FILE_PATH + fileName)) {
-			if (row.getRowNum() == 0) {
-				continue;
-			}
-			query.append(BRACES_OPEN);
-			query.append(QUOTES);
-			query.append(row.getCell(0).toString());
-			query.append(QUOTES);
-			query.append(COMMA);
-			query.append(userRepository.findByForenameAndFamilyName(row.getCell(1).toString().split("\\s+")[0],
-					row.getCell(1).toString().split("\\s+")[1]).getUserId());
-			query.append(BRACES_CLOSE);
-			if (row.getRowNum() == row.getSheet().getLastRowNum()) {
-				query.append(SEMI_COLON);
-			} else {
-				query.append(COMMA);
-			}
-		}
-		File file = new File(PATHNAME + table + SQL);
-		try (FileWriter writer = new FileWriter(file)) {
-			writer.write(query.toString());
-		}
-		return query;
+	private void userQuery(StringBuilder query, Row row) {
+		query.append(BRACES_OPEN);
+		query.append(QUOTES);
+		query.append(row.getCell(0).toString());
+		query.append(QUOTES);
+		query.append(COMMA);
+		query.append(QUOTES);
+		query.append(row.getCell(1).toString());
+		query.append(QUOTES);
+		query.append(COMMA);
+		query.append(QUOTES);
+		query.append(row.getCell(2).toString());
+		query.append(QUOTES);
+		query.append(COMMA);
+		query.append(QUOTES);
+		query.append((int) row.getCell(3).getNumericCellValue());
+		query.append(QUOTES);
+		query.append(COMMA);
+		query.append(QUOTES);
+		query.append(row.getCell(4).toString());
+		query.append(QUOTES);
+		query.append(COMMA);
+		query.append(userTypeRepository.findByTypeName(row.getCell(5).toString()).getId());
+		query.append(COMMA);
+		query.append(QUOTES);
+		query.append(ACTIVE);
+		query.append(QUOTES);
+		query.append(BRACES_CLOSE);
+	}
+
+	private void siteTypeQuery(StringBuilder query, Row row) {
+		query.append(BRACES_OPEN);
+		query.append(QUOTES);
+		query.append(row.getCell(0).toString());
+		query.append(QUOTES);
+		query.append(BRACES_CLOSE);
+	}
+
+	private void reqionQuery(StringBuilder query, Row row) {
+		query.append(BRACES_OPEN);
+		query.append(QUOTES);
+		query.append(row.getCell(0).toString());
+		query.append(QUOTES);
+		query.append(COMMA);
+		query.append(userRepository.findByForenameAndFamilyName(row.getCell(1).toString().split("\\s+")[0],
+				row.getCell(1).toString().split("\\s+")[1]).getUserId());
+		query.append(BRACES_CLOSE);
 	}
 }

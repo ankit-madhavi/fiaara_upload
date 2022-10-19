@@ -36,21 +36,8 @@ public class UploadController {
 	public String uploadFile(@RequestParam(value = "file", required = true) MultipartFile file,
 			@PathVariable String table) throws IOException {
 		String fileName = file.getOriginalFilename();
-		if (table.equals("User")) {
-			return uploadService.uploadUserFile(fileName, table).toString();
-		} else if (table.equals("Region")) {
-
-			return uploadService.uploadRegionFile(fileName, table).toString();
-		} else if (table.equals("Area")) {
-
-		} else if (table.equals("Site Type")) {
-			return uploadService.uploadSiteType(fileName,table).toString();
-		} else if (table.equals("Activity Type")) {
-
-		}
-		return null;
+		return uploadService.uploadFile(fileName, table).toString();
 	}
-
 
 	@GetMapping("/download/{table}")
 	public ResponseEntity<Resource> dowload(@PathVariable String table) throws IOException {
