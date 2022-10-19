@@ -42,7 +42,7 @@ public class UploadController {
 		} else if (table.equals("Area")) {
 
 		} else if (table.equals("Site Type")) {
-
+			return uploadService.uploadSiteType(file.getOriginalFilename()).toString();
 		} else if (table.equals("Activity Type")) {
 
 		}

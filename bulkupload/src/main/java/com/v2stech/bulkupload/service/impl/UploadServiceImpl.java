@@ -42,6 +42,8 @@ public class UploadServiceImpl implements UploadService {
 
 	private static final String USER_TABLE_WITH_COLUMN_NAME = "users (FORENAME,FAMILY_NAME,USERNAME,POSTCODE,EMAIL_ADDRESS,USER_TYPE_ID,USER_STATUS_CODE)";
 
+	private static final String SITE_TYPE_TABLE_WITH_COLUMN_NAME = "site_types (SITE_TYPE_NAME)";
+
 	private static final String INSERT = "Insert into ";
 
 	private static final String FILE_PATH = File.separator + "home" + File.separator + "v2stech" + File.separator
@@ -90,8 +92,6 @@ public class UploadServiceImpl implements UploadService {
 			query.append(getUserType(row.getCell(5).toString()));
 			query.append(COMMA);
 			query.append(QUOTES);
-			query.append(ACTIVE);
-			query.append(QUOTES);
 			query.append(BRACES_CLOSE);
 			if (row.getRowNum() == row.getSheet().getLastRowNum()) {
 				query.append(SEMI_COLON);
@@ -110,6 +110,36 @@ public class UploadServiceImpl implements UploadService {
 		return uploadRepository.findByTypeName(typeName).getId();
 	}
 
+	
+	@Override
+	public StringBuilder uploadSiteType(String fileName,String table) throws IOException {
+		StringBuilder query = new StringBuilder();
+		query.append(INSERT);
+		query.append(SITE_TYPE_TABLE_WITH_COLUMN_NAME);
+		query.append(VALUES);
+		for (Row row : readFile(FILE_PATH + fileName)) {
+			if (row.getRowNum() == 0) {
+				continue;
+			}
+			query.append(BRACES_OPEN);
+			query.append(QUOTES);
+			query.append(row.getCell(0).toString());
+			query.append(QUOTES);
+			query.append(BRACES_CLOSE);
+			if (row.getRowNum() == row.getSheet().getLastRowNum()) {
+				query.append(SEMI_COLON);
+			} else {
+				query.append(COMMA);
+			}
+		}
+		File file = new File(PATHNAME+table+SQL);
+		try (FileWriter writer = new FileWriter(file)) {
+			writer.write(query.toString());
+		}
+		return query;
+	}
+
+	
 	@Override
 	public ByteArrayInputStream downloadFile() throws IOException {
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
