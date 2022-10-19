@@ -6,15 +6,17 @@ $("#btnSubmit").click(function(event) {
 	event.preventDefault();
 	$('#sql-query').val('');
 	var file = $('#fileInput').val();
+	var tablename = $('#tableName').val();
 	var filename = check(file, "File");
-	if (filename) {
+	var table = check(tablename, "TableName");
+	if (filename && table) {
 		$('#FileError').val('');
 		var form = $('#fileUploadForm')[0];
 		var data = new FormData(form);
 		$.ajax({
 			type: "POST",
 			enctype: 'multipart/form-data',
-			url: "http://localhost:8080/read",
+			url: "http://localhost:8080/read/"+tablename,
 			data: data,
 			processData: false,
 			contentType: false,
@@ -53,4 +55,5 @@ $("#copy").click(function() {
 
 $("#download").click(function() {
 	window.location.href = "http://localhost:8080/download";
+
 });

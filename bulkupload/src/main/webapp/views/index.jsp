@@ -39,6 +39,15 @@
 						<div class="dz-default dz-message">
 							<input type="file" class="form-control" name="file" id="fileInput" >
 							<span id="FileError" class="error"></span>
+						      <select id="tableName" class="form-control mt-2">
+						        <option selected value="">Select Table Name ...</option>
+						        <option value="User">User</option>
+						         <option value="Region">Region</option>
+						          <option value="Area">Area</option>
+						           <option value="Site Type">Site Type</option>
+						            <option value="Activity Type">Activity Type</option>
+						      </select>
+							<span id="TableNameError" class="error"></span>
 							<div class="text-center m-t-20">
 								<button type="submit" class="btn btn-primary"  id="btnSubmit">Upload Now</button>
 							</div>

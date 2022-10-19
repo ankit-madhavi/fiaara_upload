@@ -22,7 +22,7 @@ import com.v2stech.bulkupload.service.UploadService;
 @Service
 public class UploadServiceImpl implements UploadService {
 
-	private static final String PATHNAME = "src/main/resources/sql/User.sql";
+	private static final String PATHNAME = "src/main/resources/sql/";
 
 	private static final String ACTIVE = "Active";
 
@@ -98,7 +98,7 @@ public class UploadServiceImpl implements UploadService {
 			}
 		}
 		File file = new File(PATHNAME);
-		try (FileWriter writer = new FileWriter(file)) {
+		try (FileWriter writer = new FileWriter(File.createTempFile("Sachin", ".sql", file))) {
 			writer.write(query.toString());
 		}
 		return query;
