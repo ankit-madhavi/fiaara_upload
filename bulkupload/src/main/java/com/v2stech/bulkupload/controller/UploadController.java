@@ -53,7 +53,7 @@ public class UploadController {
 	public ResponseEntity<Resource> dowload() throws IOException {
 		InputStreamResource inputStreamResource = new InputStreamResource(uploadService.downloadFile());
 		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= User" + new Date() + SQL)
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= User" + SQL)
 				.contentType(MediaType.parseMediaType("application/octet-stream")).body(inputStreamResource);
 	}
 

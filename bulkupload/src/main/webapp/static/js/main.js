@@ -23,10 +23,11 @@ $("#btnSubmit").click(function(event) {
 			cache: false,
 			timeout: 600000,
 			success: function(response) {
+				$('#tableName').attr("disabled", true);
 				$('#sql-query').val(response);
 			},
 			error: function(error) {
-				$('#errorMessage').html(error.responseJSON.message)
+				$('#errorMessage').html("Something Went Worng..")
 				$('#error').show();
 				$("#error").delay(8000).fadeOut("slow");
 			}
@@ -34,6 +35,10 @@ $("#btnSubmit").click(function(event) {
 	}
 });
 
+
+$("#fileInput").click(function() {
+	$('#tableName').attr("disabled", false);
+	});
 
 function check(filed, message) {
 	if (filed == "" || filed == null) {

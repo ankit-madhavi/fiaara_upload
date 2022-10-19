@@ -98,7 +98,7 @@ public class UploadServiceImpl implements UploadService {
 			}
 		}
 		File file = new File(PATHNAME);
-		try (FileWriter writer = new FileWriter(File.createTempFile("Sachin", ".sql", file))) {
+		try (FileWriter writer = new FileWriter(file)) {
 			writer.write(query.toString());
 		}
 		return query;
