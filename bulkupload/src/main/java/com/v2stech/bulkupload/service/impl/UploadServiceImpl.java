@@ -16,6 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.v2stech.bulkupload.repository.RegionRepository;
 import com.v2stech.bulkupload.repository.UserRepository;
 import com.v2stech.bulkupload.repository.UserTypeRepository;
 import com.v2stech.bulkupload.service.UploadService;
@@ -46,6 +47,8 @@ public class UploadServiceImpl implements UploadService {
 	private static final String SITE_TYPE_TABLE_WITH_COLUMN_NAME = "site_types (SITE_TYPE_NAME)";
 
 	private static final String REGION_TABLE_WITH_COLUMN_NAME = "region (REGION_NAME,REGION_MANAGER_ID)";
+	
+	private static final String AREA_TABLE_WITH_COLUMN_NAME = "area (AREA_NAME,REGION_ID,AREA_MANAGER_ID)";
 
 	private static final String INSERT = "Insert into ";
 
@@ -57,6 +60,9 @@ public class UploadServiceImpl implements UploadService {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	RegionRepository regionRepository;
 
 	public Sheet readFile(String filePath) throws IOException {
 		FileInputStream fileInputStream = new FileInputStream(new File(filePath));
@@ -74,7 +80,7 @@ public class UploadServiceImpl implements UploadService {
 		} else if (table.equals("Region")) {
 			query.append(REGION_TABLE_WITH_COLUMN_NAME);
 		} else if (table.equals("Area")) {
-
+			query.append(AREA_TABLE_WITH_COLUMN_NAME);
 		} else if (table.equals("Site Type")) {
 			query.append(SITE_TYPE_TABLE_WITH_COLUMN_NAME);
 		} else if (table.equals("Activity Type")) {
@@ -102,7 +108,7 @@ public class UploadServiceImpl implements UploadService {
 		} else if (table.equals("Region")) {
 			reqionQuery(query, row);
 		} else if (table.equals("Area")) {
-
+			areaQuery(query, row);
 		} else if (table.equals("Site Type")) {
 			siteTypeQuery(query, row);
 		} else if (table.equals("Activity Type")) {
@@ -171,6 +177,19 @@ public class UploadServiceImpl implements UploadService {
 		query.append(COMMA);
 		query.append(userRepository.findByForenameAndFamilyName(row.getCell(1).toString().split("\\s+")[0],
 				row.getCell(1).toString().split("\\s+")[1]).getUserId());
+		query.append(BRACES_CLOSE);
+	}
+	
+	private void areaQuery(StringBuilder query, Row row) {
+		query.append(BRACES_OPEN);
+		query.append(QUOTES);
+		query.append(row.getCell(0).toString());
+		query.append(QUOTES);
+		query.append(COMMA);
+		query.append(regionRepository.findByRegionName(row.getCell(1).toString()).getRegionId());
+		query.append(COMMA);
+		query.append(userRepository.findByForenameAndFamilyName(row.getCell(2).toString().split("\\s+")[0],
+				row.getCell(2).toString().split("\\s+")[1]).getUserId());
 		query.append(BRACES_CLOSE);
 	}
 }
