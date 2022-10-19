@@ -1,7 +1,6 @@
 package com.v2stech.bulkupload.controller;
 
 import java.io.IOException;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -35,10 +34,11 @@ public class UploadController {
 	@PostMapping("/read/{table}")
 	public String uploadFile(@RequestParam(value = "file", required = true) MultipartFile file,
 			@PathVariable String table) throws IOException {
+		String fileName = file.getOriginalFilename();
 		if (table.equals("User")) {
-			return uploadService.uploadUserFile(file.getOriginalFilename()).toString();
+			return uploadService.uploadUserFile(fileName, table).toString();
 		} else if (table.equals("Region")) {
-			
+			//return uploadService.uploadRegionFile(fileName, table).toString();
 		} else if (table.equals("Area")) {
 
 		} else if (table.equals("Site Type")) {
@@ -48,6 +48,7 @@ public class UploadController {
 		}
 		return null;
 	}
+
 
 	@GetMapping("/download")
 	public ResponseEntity<Resource> dowload() throws IOException {

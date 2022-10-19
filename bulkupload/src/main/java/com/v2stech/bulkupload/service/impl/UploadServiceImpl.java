@@ -22,6 +22,8 @@ import com.v2stech.bulkupload.service.UploadService;
 @Service
 public class UploadServiceImpl implements UploadService {
 
+	private static final String SQL = ".sql";
+	
 	private static final String PATHNAME = "src/main/resources/sql/";
 
 	private static final String ACTIVE = "Active";
@@ -55,7 +57,7 @@ public class UploadServiceImpl implements UploadService {
 	}
 
 	@Override
-	public StringBuilder uploadUserFile(String fileName) throws IOException {
+	public StringBuilder uploadUserFile(String fileName,String table) throws IOException {
 		StringBuilder query = new StringBuilder();
 		query.append(INSERT);
 		query.append(USER_TABLE_WITH_COLUMN_NAME);
@@ -97,7 +99,7 @@ public class UploadServiceImpl implements UploadService {
 				query.append(COMMA);
 			}
 		}
-		File file = new File(PATHNAME);
+		File file = new File(PATHNAME+table+SQL);
 		try (FileWriter writer = new FileWriter(file)) {
 			writer.write(query.toString());
 		}
