@@ -1,6 +1,7 @@
 package com.v2stech.bulkupload.controller;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -38,11 +39,12 @@ public class UploadController {
 		if (table.equals("User")) {
 			return uploadService.uploadUserFile(fileName, table).toString();
 		} else if (table.equals("Region")) {
-			//return uploadService.uploadRegionFile(fileName, table).toString();
+
+			return uploadService.uploadRegionFile(fileName, table).toString();
 		} else if (table.equals("Area")) {
 
 		} else if (table.equals("Site Type")) {
-			return uploadService.uploadSiteType(file.getOriginalFilename()).toString();
+			return uploadService.uploadSiteType(fileName,table).toString();
 		} else if (table.equals("Activity Type")) {
 
 		}
@@ -50,11 +52,11 @@ public class UploadController {
 	}
 
 
-	@GetMapping("/download")
-	public ResponseEntity<Resource> dowload() throws IOException {
-		InputStreamResource inputStreamResource = new InputStreamResource(uploadService.downloadFile());
+	@GetMapping("/download/{table}")
+	public ResponseEntity<Resource> dowload(@PathVariable String table) throws IOException {
+		InputStreamResource inputStreamResource = new InputStreamResource(uploadService.downloadFile(table));
 		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= User" + SQL)
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + table + new Date() + SQL)
 				.contentType(MediaType.parseMediaType("application/octet-stream")).body(inputStreamResource);
 	}
 
