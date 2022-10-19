@@ -16,11 +16,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.v2stech.bulkupload.repository.UploadRepository;
+import com.v2stech.bulkupload.repository.UserRepository;
+import com.v2stech.bulkupload.repository.UserTypeRepository;
 import com.v2stech.bulkupload.service.UploadService;
 
 @Service
 public class UploadServiceImpl implements UploadService {
+
+	private static final String SQL = ".sql";
 
 	private static final String PATHNAME = "src/main/resources/sql/";
 
@@ -40,13 +43,18 @@ public class UploadServiceImpl implements UploadService {
 
 	private static final String USER_TABLE_WITH_COLUMN_NAME = "users (FORENAME,FAMILY_NAME,USERNAME,POSTCODE,EMAIL_ADDRESS,USER_TYPE_ID,USER_STATUS_CODE)";
 
+	private static final String REGION_TABLE_WITH_COLUMN_NAME = "region (REGION_NAME,REGION_MANAGER_ID)";
+
 	private static final String INSERT = "Insert into ";
 
 	private static final String FILE_PATH = File.separator + "home" + File.separator + "v2stech" + File.separator
 			+ "Downloads" + File.separator;
 
 	@Autowired
-	UploadRepository uploadRepository;
+	UserTypeRepository userTypeRepository;
+
+	@Autowired
+	UserRepository userRepository;
 
 	public Sheet readFile(String filePath) throws IOException {
 		FileInputStream fileInputStream = new FileInputStream(new File(filePath));
@@ -55,7 +63,7 @@ public class UploadServiceImpl implements UploadService {
 	}
 
 	@Override
-	public StringBuilder uploadUserFile(String fileName) throws IOException {
+	public StringBuilder uploadUserFile(String fileName, String table) throws IOException {
 		StringBuilder query = new StringBuilder();
 		query.append(INSERT);
 		query.append(USER_TABLE_WITH_COLUMN_NAME);
@@ -85,7 +93,7 @@ public class UploadServiceImpl implements UploadService {
 			query.append(row.getCell(4).toString());
 			query.append(QUOTES);
 			query.append(COMMA);
-			query.append(getUserType(row.getCell(5).toString()));
+			query.append(userTypeRepository.findByTypeName(row.getCell(5).toString()).getId());
 			query.append(COMMA);
 			query.append(QUOTES);
 			query.append(ACTIVE);
@@ -97,22 +105,49 @@ public class UploadServiceImpl implements UploadService {
 				query.append(COMMA);
 			}
 		}
-		File file = new File(PATHNAME);
+		File file = new File(PATHNAME + table + SQL);
 		try (FileWriter writer = new FileWriter(file)) {
 			writer.write(query.toString());
 		}
 		return query;
 	}
 
-	public Long getUserType(String typeName) {
-		return uploadRepository.findByTypeName(typeName).getId();
+	@Override
+	public ByteArrayInputStream downloadFile(String table) throws IOException {
+		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+			byte[] array = Files.readAllBytes(Paths.get(PATHNAME + table + SQL));
+			return new ByteArrayInputStream(array);
+		}
 	}
 
 	@Override
-	public ByteArrayInputStream downloadFile() throws IOException {
-		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-			byte[] array = Files.readAllBytes(Paths.get(PATHNAME));
-			return new ByteArrayInputStream(array);
+	public Object uploadRegionFile(String fileName, String table) throws IOException {
+		StringBuilder query = new StringBuilder();
+		query.append(INSERT);
+		query.append(REGION_TABLE_WITH_COLUMN_NAME);
+		query.append(VALUES);
+		for (Row row : readFile(FILE_PATH + fileName)) {
+			if (row.getRowNum() == 0) {
+				continue;
+			}
+			query.append(BRACES_OPEN);
+			query.append(QUOTES);
+			query.append(row.getCell(0).toString());
+			query.append(QUOTES);
+			query.append(COMMA);
+			query.append(userRepository.findByForenameAndFamilyName(row.getCell(1).toString().split("\\s+")[0],
+					row.getCell(1).toString().split("\\s+")[1]).getUserId());
+			query.append(BRACES_CLOSE);
+			if (row.getRowNum() == row.getSheet().getLastRowNum()) {
+				query.append(SEMI_COLON);
+			} else {
+				query.append(COMMA);
+			}
 		}
+		File file = new File(PATHNAME + table + SQL);
+		try (FileWriter writer = new FileWriter(file)) {
+			writer.write(query.toString());
+		}
+		return query;
 	}
 }
