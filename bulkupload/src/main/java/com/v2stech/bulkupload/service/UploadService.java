@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public interface UploadService {
 
-	StringBuilder uploadFile(String fileName) throws IOException;
+	StringBuilder uploadUserFile(String fileName) throws IOException;
 
 	ByteArrayInputStream downloadFile() throws IOException;
 

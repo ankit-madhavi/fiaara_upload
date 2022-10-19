@@ -52,5 +52,5 @@ $("#copy").click(function() {
 });
 
 $("#download").click(function() {
-			window.location.href = "http://localhost:8080/download";
+	window.location.href = "http://localhost:8080/download";
 });

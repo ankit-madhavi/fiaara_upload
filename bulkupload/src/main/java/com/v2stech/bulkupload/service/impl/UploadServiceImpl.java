@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -56,7 +55,7 @@ public class UploadServiceImpl implements UploadService {
 	}
 
 	@Override
-	public StringBuilder uploadFile(String fileName) throws IOException {
+	public StringBuilder uploadUserFile(String fileName) throws IOException {
 		StringBuilder query = new StringBuilder();
 		query.append(INSERT);
 		query.append(USER_TABLE_WITH_COLUMN_NAME);

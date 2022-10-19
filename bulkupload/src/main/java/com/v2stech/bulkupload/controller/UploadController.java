@@ -22,28 +22,39 @@ import com.v2stech.bulkupload.service.UploadService;
 
 @RestController
 public class UploadController {
-	
+
 	private static final String SQL = ".sql";
 	@Autowired
 	UploadService uploadService;
-	
-	
+
 	@RequestMapping("/")
 	public ModelAndView getWelcomePage() {
 		return new ModelAndView("index");
 	}
-	
-	@PostMapping("/read")
-	public String uploadFile(@RequestParam(value = "file", required = true) MultipartFile file) throws IOException {
-		return uploadService.uploadFile(file.getOriginalFilename()).toString();
+
+	@PostMapping("/read/{table}")
+	public String uploadFile(@RequestParam(value = "file", required = true) MultipartFile file,
+			@PathVariable String table) throws IOException {
+		if (table.equals("User")) {
+			return uploadService.uploadUserFile(file.getOriginalFilename()).toString();
+		} else if (table.equals("Region")) {
+			
+		} else if (table.equals("Area")) {
+
+		} else if (table.equals("Site Type")) {
+
+		} else if (table.equals("Activity Type")) {
+
+		}
+		return null;
 	}
-	
+
 	@GetMapping("/download")
-	public ResponseEntity<Resource> dowload() throws IOException{
+	public ResponseEntity<Resource> dowload() throws IOException {
 		InputStreamResource inputStreamResource = new InputStreamResource(uploadService.downloadFile());
 		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename= User"+new Date()+SQL)
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= User" + new Date() + SQL)
 				.contentType(MediaType.parseMediaType("application/octet-stream")).body(inputStreamResource);
 	}
-	
+
 }
