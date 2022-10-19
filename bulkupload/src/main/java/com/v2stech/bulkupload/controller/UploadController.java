@@ -35,10 +35,11 @@ public class UploadController {
 	@PostMapping("/read/{table}")
 	public String uploadFile(@RequestParam(value = "file", required = true) MultipartFile file,
 			@PathVariable String table) throws IOException {
+		String fileName = file.getOriginalFilename();
 		if (table.equals("User")) {
-			return uploadService.uploadUserFile(file.getOriginalFilename()).toString();
+			return uploadService.uploadUserFile(fileName, table).toString();
 		} else if (table.equals("Region")) {
-			
+			return uploadService.uploadRegionFile(fileName, table).toString();
 		} else if (table.equals("Area")) {
 
 		} else if (table.equals("Site Type")) {
@@ -49,11 +50,11 @@ public class UploadController {
 		return null;
 	}
 
-	@GetMapping("/download")
-	public ResponseEntity<Resource> dowload() throws IOException {
-		InputStreamResource inputStreamResource = new InputStreamResource(uploadService.downloadFile());
+	@GetMapping("/download/{table}")
+	public ResponseEntity<Resource> dowload(@PathVariable String table) throws IOException {
+		InputStreamResource inputStreamResource = new InputStreamResource(uploadService.downloadFile(table));
 		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= User" + SQL)
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + table + new Date() + SQL)
 				.contentType(MediaType.parseMediaType("application/octet-stream")).body(inputStreamResource);
 	}
 

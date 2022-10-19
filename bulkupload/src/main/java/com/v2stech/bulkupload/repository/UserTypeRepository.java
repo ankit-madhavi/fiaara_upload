@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.v2stech.bulkupload.entity.UserTypeEntity;
 
 @Repository
-public interface UploadRepository extends JpaRepository<UserTypeEntity, Long>{
+public interface UserTypeRepository extends JpaRepository<UserTypeEntity, Long>{
 
 	UserTypeEntity findByTypeName(String typeName);
 	

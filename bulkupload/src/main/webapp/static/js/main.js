@@ -59,6 +59,7 @@ $("#copy").click(function() {
 });
 
 $("#download").click(function() {
-	window.location.href = "http://localhost:8080/download";
+	var tablename = $('#tableName').val();
+	window.location.href = "http://localhost:8080/download/"+tablename;
 
 });
