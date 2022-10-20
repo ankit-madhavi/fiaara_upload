@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -47,8 +48,10 @@ public class UploadServiceImpl implements UploadService {
 	private static final String SITE_TYPE_TABLE_WITH_COLUMN_NAME = "site_types (SITE_TYPE_NAME)";
 
 	private static final String REGION_TABLE_WITH_COLUMN_NAME = "region (REGION_NAME,REGION_MANAGER_ID)";
-	
+
 	private static final String AREA_TABLE_WITH_COLUMN_NAME = "area (AREA_NAME,REGION_ID,AREA_MANAGER_ID)";
+
+	private static final String ACTIVITY_TYPE_TABLE_WITH_COLUMN_NAME = "activity_types (NAME,AVERAGE_DURATION,DATE_CREATED,CREATED_BY,STATUS)";
 
 	private static final String INSERT = "Insert into ";
 
@@ -60,7 +63,7 @@ public class UploadServiceImpl implements UploadService {
 
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	RegionRepository regionRepository;
 
@@ -84,7 +87,7 @@ public class UploadServiceImpl implements UploadService {
 		} else if (table.equals("Site Type")) {
 			query.append(SITE_TYPE_TABLE_WITH_COLUMN_NAME);
 		} else if (table.equals("Activity Type")) {
-
+			query.append(ACTIVITY_TYPE_TABLE_WITH_COLUMN_NAME);
 		}
 		query.append(VALUES);
 		for (Row row : readFile(FILE_PATH + fileName)) {
@@ -112,7 +115,7 @@ public class UploadServiceImpl implements UploadService {
 		} else if (table.equals("Site Type")) {
 			siteTypeQuery(query, row);
 		} else if (table.equals("Activity Type")) {
-
+			activityTypeQuery(query, row);
 		}
 	}
 
@@ -179,7 +182,7 @@ public class UploadServiceImpl implements UploadService {
 				row.getCell(1).toString().split("\\s+")[1]).getUserId());
 		query.append(BRACES_CLOSE);
 	}
-	
+
 	private void areaQuery(StringBuilder query, Row row) {
 		query.append(BRACES_OPEN);
 		query.append(QUOTES);
@@ -190,6 +193,28 @@ public class UploadServiceImpl implements UploadService {
 		query.append(COMMA);
 		query.append(userRepository.findByForenameAndFamilyName(row.getCell(2).toString().split("\\s+")[0],
 				row.getCell(2).toString().split("\\s+")[1]).getUserId());
+		query.append(BRACES_CLOSE);
+	}
+
+	private void activityTypeQuery(StringBuilder query, Row row) {
+		query.append(BRACES_OPEN);
+		query.append(QUOTES);
+		query.append(row.getCell(0).toString());
+		query.append(QUOTES);
+		query.append(COMMA);
+		query.append(QUOTES);
+		query.append((long) row.getCell(1).getNumericCellValue());
+		query.append(QUOTES);
+		query.append(COMMA);
+		query.append("CURDATE()");
+		query.append(COMMA);
+		query.append(QUOTES);
+		query.append("1");
+		query.append(QUOTES);
+		query.append(COMMA);
+		query.append(QUOTES);
+		query.append(ACTIVE);
+		query.append(QUOTES);
 		query.append(BRACES_CLOSE);
 	}
 }
