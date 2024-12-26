@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -24,6 +23,16 @@ import com.v2stech.bulkupload.service.UploadService;
 
 @Service
 public class UploadServiceImpl implements UploadService {
+
+	private static final String ACTIVITY_TYPE = "Activity Type";
+
+	private static final String SITE_TYPE = "Site Type";
+
+	private static final String AREA = "Area";
+
+	private static final String REGION = "Region";
+
+	private static final String USER = "User";
 
 	private static final String SQL = ".sql";
 
@@ -68,8 +77,7 @@ public class UploadServiceImpl implements UploadService {
 	RegionRepository regionRepository;
 
 	public Sheet readFile(String filePath) throws IOException {
-		FileInputStream fileInputStream = new FileInputStream(new File(filePath));
-		Workbook workbook = new XSSFWorkbook(fileInputStream);
+		Workbook workbook = new XSSFWorkbook(new FileInputStream(new File(filePath)));
 		return workbook.getSheetAt(0);
 	}
 
@@ -78,15 +86,15 @@ public class UploadServiceImpl implements UploadService {
 	public StringBuilder uploadFile(String fileName, String table) throws IOException {
 		StringBuilder query = new StringBuilder();
 		query.append(INSERT);
-		if (table.equals("User")) {
+		if (table.equals(USER)) {
 			query.append(USER_TABLE_WITH_COLUMN_NAME);
-		} else if (table.equals("Region")) {
+		} else if (table.equals(REGION)) {
 			query.append(REGION_TABLE_WITH_COLUMN_NAME);
-		} else if (table.equals("Area")) {
+		} else if (table.equals(AREA)) {
 			query.append(AREA_TABLE_WITH_COLUMN_NAME);
-		} else if (table.equals("Site Type")) {
+		} else if (table.equals(SITE_TYPE)) {
 			query.append(SITE_TYPE_TABLE_WITH_COLUMN_NAME);
-		} else if (table.equals("Activity Type")) {
+		} else if (table.equals(ACTIVITY_TYPE)) {
 			query.append(ACTIVITY_TYPE_TABLE_WITH_COLUMN_NAME);
 		}
 		query.append(VALUES);
@@ -97,6 +105,7 @@ public class UploadServiceImpl implements UploadService {
 			createQueryByExcel(table, query, row);
 			if (row.getRowNum() == row.getSheet().getLastRowNum()) {
 				query.append(SEMI_COLON);
+				
 			} else {
 				query.append(COMMA);
 			}
@@ -106,15 +115,15 @@ public class UploadServiceImpl implements UploadService {
 	}
 
 	private void createQueryByExcel(String table, StringBuilder query, Row row) {
-		if (table.equals("User")) {
+		if (table.equals(USER)) {
 			userQuery(query, row);
-		} else if (table.equals("Region")) {
+		} else if (table.equals(REGION)) {
 			reqionQuery(query, row);
-		} else if (table.equals("Area")) {
+		} else if (table.equals(AREA)) {
 			areaQuery(query, row);
-		} else if (table.equals("Site Type")) {
+		} else if (table.equals(SITE_TYPE)) {
 			siteTypeQuery(query, row);
-		} else if (table.equals("Activity Type")) {
+		} else if (table.equals(ACTIVITY_TYPE)) {
 			activityTypeQuery(query, row);
 		}
 	}
@@ -208,9 +217,7 @@ public class UploadServiceImpl implements UploadService {
 		query.append(COMMA);
 		query.append("CURDATE()");
 		query.append(COMMA);
-		query.append(QUOTES);
-		query.append("1");
-		query.append(QUOTES);
+		query.append(1);
 		query.append(COMMA);
 		query.append(QUOTES);
 		query.append(ACTIVE);
