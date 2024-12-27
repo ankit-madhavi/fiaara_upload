@@ -1,4 +1,6 @@
 {
+  "platform": "github",
+  "token": "$RENOVATE_TOKEN",
   "repositories": [
     "ankit-madhavi-v2stech/fiaara_upload"
   ]
