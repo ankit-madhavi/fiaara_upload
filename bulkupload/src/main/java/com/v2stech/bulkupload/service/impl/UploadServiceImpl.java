@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -138,7 +138,7 @@ public class UploadServiceImpl implements UploadService {
 	@Override
 	public ByteArrayInputStream downloadFile(String table) throws IOException {
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-			byte[] array = Files.readAllBytes(Paths.get(PATHNAME + table + SQL));
+			byte[] array = Files.readAllBytes(Path.of(PATHNAME + table + SQL));
 			return new ByteArrayInputStream(array);
 		}
 	}
